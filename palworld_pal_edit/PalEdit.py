@@ -471,7 +471,7 @@ class PalEdit():
 
         self.updateAttacks()
         self.refresh(i)
-
+        
     def onselect(self, evt):
         self.is_onselect = True
         w = evt.widget
@@ -870,41 +870,44 @@ Do you want to use %s's DEFAULT Scaling (%s)?
             return
 
         pal = self.palbox[self.players[self.current.get()]][self.editindex]
+        i = self.listdisplay.curselection()
         l = pal.GetLevel()
 
         if self.phpvar.dirty:
             self.phpvar.dirty = False
             h = self.phpvar.get()
+            print(f"{pal.GetFullName()}: TalentHP {pal.GetTalentHP()} -> {h}")
             pal.SetTalentHP(h)
             self.handleMaxHealthUpdates(pal)
-            print(f"{pal.GetFullName()}: TalentHP {pal.GetTalentHP()} -> {h}")
-            
-            # hv = 500 + (((70 * 0.5) * l) * (1 + (h / 100)))
-            # self.hthstatval.config(text=math.floor(hv))
+            self.refresh(i)
+
         if self.meleevar.dirty:
             self.meleevar.dirty = False
             a = self.meleevar.get()
             print(f"{pal.GetFullName()}: AttackMelee {pal.GetAttackMelee()} -> {a}")
             pal.SetAttackMelee(a)
-            # av = 100 + (((70 * 0.75) * l) * (1 + (a / 100)))
-            # self.atkstatval.config(text=math.floor(av))
+            self.refresh(i)
+
         if self.shotvar.dirty:
             self.shotvar.dirty = False
             r = self.shotvar.get()
             print(f"{pal.GetFullName()}: AttackRanged {pal.GetAttackRanged()} -> {r}")
             pal.SetAttackRanged(r)
+            self.refresh(i)
+
         if self.defvar.dirty:
             self.defvar.dirty = False
             d = self.defvar.get()
             print(f"{pal.GetFullName()}: Defence {pal.GetDefence()} -> {d}")
             pal.SetDefence(d)
-            # dv = 50 + (((70 * 0.75) * l) * (1 + (d / 100)))
-            # self.defstatval.config(text=math.floor(dv))
+            self.refresh(i)
+
         if self.wspvar.dirty:
             self.wspvar.dirty = False
             w = self.wspvar.get()
             print(f"{pal.GetFullName()}: WorkSpeed {pal.GetWorkSpeed()} -> {w}")
             pal.SetWorkSpeed(w)
+            self.refresh(i)
 
         if not pal.IsTower() and not pal.IsHuman():
             calc = pal.CalculateIngameStats()
